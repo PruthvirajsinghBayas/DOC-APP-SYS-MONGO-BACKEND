@@ -46,16 +46,16 @@ const login = async (req, res) => {
         const loggedUser = await User.findOne({email:email})
         console.log(loggedUser, "logged user")
         if(!loggedUser){    
-           return  res.status(400).send({msg:"User not found",success:false})
+            res.status(400).send({msg:"User not found",success:false})
         }
         if(await bcrypt.compare(password, loggedUser.password)){
             const payload = {id:loggedUser._id, role:loggedUser.role}
 console.log(payload)
             const token = jwt.sign(payload, process.env.SECREAT_KEY, {expiresIn:'1d'})
             console.log(token,"token in controller")
-           return res.status(200).send({msg:"Logged in succesfull", success:true,token:token})
+           return res.status(202).send({msg:"Logged in succesfull", success:true,token:token})
         }else{
-          return  res.status(400).send({msg:"password incorrect!!!"})
+            res.status(400).send({msg:"password incorrect!!!"})
         }        
   } catch (error) {
     res.status(500).send({ msg: "Server Error" });
@@ -77,6 +77,8 @@ const getUserInfo = async (req, res) => {
 
 const doctorList = async (req, res) => {
   try {
+    const docList = await User.find({role:"Doctor"})
+    res.status(200).send({doc:docList, success:true})
   } catch (error) {
     res.status(500).send({ msg: "Server Error" });
   }

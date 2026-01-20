@@ -27,11 +27,7 @@ const applyDoctor = async (req, res) => {
 
 const docStatus = async (req, res) => {
   try {
-    //admin req.user.id
-    // DoctorID = req.params.DoctorID   Doctor model
-    //     Doctor model status ->accepted
-    //    if status is accepted -> createdBy  = userID   -> role ->doctor
-
+  
     const DoctorID = req.params.DoctorID;
     console.log(req.user.id, "admin", req.params.DoctorID, "DoctorID");
     const getDoctor = await Doctor.findById(DoctorID);
@@ -39,7 +35,7 @@ const docStatus = async (req, res) => {
     if (!getDoctor) {
       res.status(400).send({ msg: "Doctor not found", success: true });
     } else {
-      // 2️⃣ Update doctor status
+      
 
       const updatedDoc = await Doctor.findByIdAndUpdate(
         DoctorID,
@@ -69,10 +65,24 @@ res
   }
 };
 
+
+
+async function docApplyList  (req,res){
+try {
+    const doctorAplyList = await Doctor.find({status:"Pending"})
+    res.status(200).send({doc:doctorAplyList, success:true})
+  } catch (error) {
+    res.status(500).send({ msg: "Server Error" });
+  }
+}
+
+
+
 module.exports = {
   applyDoctor,
-  docStatus
+  docStatus,
 //   getDoctorInfo,
 //   updateDoctor,
 //   deleteDoctor,
+docApplyList
 };
